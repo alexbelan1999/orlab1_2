@@ -50,7 +50,7 @@ for i in range(0,G1.number_of_nodes()-1):
         for t in range(0, G1.number_of_edges()):
             flag1 = Skeleton.has_node(edges_with_weight1[t][0])
             flag2 = Skeleton.has_node(edges_with_weight1[t][1])
-            if ((flag1 == True and flag2 == False) or (flag1 == False and flag2 == True)):
+            if ((flag1 == True and flag2 == False) or (flag1 == False and flag2 == True) or (flag1 == False and flag2 == False) or (flag1 == True and flag2 == True)):
                 if min_edge_weight > edges_with_weight1[t][2]:
                     min_edge = t
                     min_edge_weight = edges_with_weight1[t][2]
@@ -60,12 +60,19 @@ for i in range(0,G1.number_of_nodes()-1):
 
         flag3 = Skeleton.has_node(edges_with_weight1[min_edge][0])
         flag4 = Skeleton.has_node(edges_with_weight1[min_edge][1])
+        if (flag3 == False) and (flag4 == False):
+            Skeleton.add_node(edges_with_weight1[min_edge][0])
+            Skeleton.add_node(edges_with_weight1[min_edge][1])
+            print("Add nodes: " + str(edges_with_weight1[min_edge][0]) + " , " + str(edges_with_weight1[min_edge][1]))
 
-        if flag3 == True:
+        elif (flag3 == True) and (flag4 == True):
+            print("Dont't add node")
+
+        elif flag3 == True:
             Skeleton.add_node(edges_with_weight1[min_edge][1])
             print('Add node ' + str(edges_with_weight1[min_edge][1]))
 
-        if flag4 == True:
+        elif flag4 == True:
             Skeleton.add_node(edges_with_weight1[min_edge][0])
             print('Add node ' + str(edges_with_weight1[min_edge][0]))
 
@@ -84,6 +91,12 @@ print(edges_with_weight2)
 print(Skeleton.nodes)
 
 Skeleton.add_weighted_edges_from(edges_with_weight2)
+
+sumweight = 0
+for x in range(0,len(edges_with_weight2)):
+    sumweight+=edges_with_weight2[x][2]
+print("Skeleton min weight sum: " + str(sumweight))
+
 layout2 = nx.spring_layout(Skeleton)
 nx.draw(Skeleton, layout2, with_labels=True, node_color='b')
 labels2 = nx.get_edge_attributes(Skeleton, "weight")
